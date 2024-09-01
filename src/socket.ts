@@ -6,4 +6,4 @@ const URL =
 		? 'https://scroll-backend.vercel.app'
 		: 'http://localhost:3000';
 
-export const socket = io(URL);
+export const socket = io(URL, { withCredentials: true });
