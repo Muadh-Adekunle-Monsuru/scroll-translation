@@ -1,44 +1,56 @@
+import { useMutation, useQuery } from 'convex/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Card from './Card';
-import { useEffect, useState } from 'react';
-import { socket } from './socket';
 import { nanoid } from 'nanoid';
-
+import { useEffect, useState } from 'react';
+import { api } from '../convex/_generated/api';
+import Card from './Card';
+import { Id } from '../convex/_generated/dataModel';
 function App() {
+	const [userId, setUserId] = useState<Id<'documents'>>();
 	const { scrollY } = useScroll();
-	const scroll = useTransform(scrollY, [0, 300], ['100', '-100rem']);
+	const scroll = useTransform(
+		scrollY,
+		[0, window.innerHeight],
+		['100', '-100rem']
+	);
 	const [isConnected, setIsConnected] = useState(false);
-	const [message, setMessage] = useState('');
+	const addUser = useMutation(api.data.addUser);
+	const users = useQuery(api.data.GetAllUsers);
+	const removeUser = useMutation(api.data.RemoveUser);
 
 	useEffect(() => {
-		function onConnect() {
-			console.log('connected');
-			setIsConnected(true);
-			const user = nanoid();
-			socket.emit('user', user);
-		}
-
-		function onDisconnect() {
-			// alert('disconnected');
-			setIsConnected(false);
-		}
-
-		function handleEmit(msg: string) {
-			console.log(msg);
-		}
-
-		socket.on('connect', onConnect);
-		socket.on('disconnect', onDisconnect);
-		socket.on('user', (msg) => {
-			console.log(msg);
-			setMessage(msg);
-		});
-		return () => {
-			socket.off('connection', onConnect);
-			socket.off('disconnect', onDisconnect);
-			socket.off('user', handleEmit);
+		const createuser = async () => {
+			const id = await addUser({ userId: nanoid() });
+			setUserId(id);
 		};
+		createuser();
 	}, []);
+
+	useEffect(() => {
+		if (users) setIsConnected(true);
+	}, [users]);
+
+	useEffect(() => {
+		const handleClose = (event: BeforeUnloadEvent) => {
+			if (!userId) return;
+
+			const payload = JSON.stringify({ userId });
+			const url = 'http://localhost:3000/removeUser';
+
+			navigator.sendBeacon(url, payload);
+
+			const message = 'Sure you want to leave?';
+			event.returnValue = message;
+			return message;
+		};
+
+		window.addEventListener('beforeunload', handleClose);
+
+		return () => {
+			window.removeEventListener('beforeunload', handleClose);
+		};
+	}, [userId]);
+
 	return (
 		<section>
 			<div className='h-[200vh] bg-slate-200 w-full'>
@@ -49,7 +61,7 @@ function App() {
 						} `}
 					></div>
 					<span className='text-sm text-white font-mono uppercase'>
-						{message}
+						{users?.length}
 					</span>
 				</div>
 				<div className='h-screen bg-[#1f1f1f] sticky top-0 flex items-center justify-center overflow-hidden'>

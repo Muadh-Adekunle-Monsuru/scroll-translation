@@ -1,35 +1,33 @@
-import express from 'express';
-import { createServer } from 'node:http';
-import { Server } from 'socket.io';
-import cors from 'cors';
+// Import necessary modules and initialize Convex client
+const express = require('express');
+const bodyParser = require('body-parser');
+const { ConvexHttpClient } = require('convex/server'); // Adjust this based on your Convex setup
+
 const app = express();
-app.use(cors());
-const server = createServer(app);
-const io = new Server(server, {
-	cors: {
-		origin: 'https://scroll-wheat.vercel.app',
-		methods: ['GET', 'POST'],
-		credentials: true,
-	},
+const port = 3000;
+
+app.use(bodyParser.json());
+
+// Assuming you have a Convex client setup, replace the URL and key with your actual Convex project details
+const convex = ConvexHttpClient(
+	'https://terrific-cricket-106.convex.cloud',
+	{}
+);
+
+// Define the removeUser endpoint
+app.post('/removeUser', async (req, res) => {
+	const { userId } = req.body;
+
+	try {
+		// Call your Convex mutation to remove the user
+		await convex.mutation('removeUser')(userId);
+		res.status(200).json({ message: 'User removed' });
+	} catch (error) {
+		console.error('Error removing user:', error);
+		res.status(500).json({ message: 'Error removing user' });
+	}
 });
 
-app.get('/', (req, res) => {
-	res.send('<h1>Hello World</h1>');
-});
-
-const users = [];
-io.on('connect', (socket) => {
-	socket.on('user', (user) => {
-		console.log(`${user} connected`);
-		users.push(user);
-		io.emit('user', `${users.length} active users`);
-	});
-
-	socket.on('disconnect', () => {
-		users.pop();
-	});
-});
-
-server.listen(3000, () => {
-	console.log(' ⚡Server running on http://localhost:3000');
+app.listen(port, () => {
+	console.log(`Server running on port ${port}`);
 });
