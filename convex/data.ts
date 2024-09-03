@@ -1,14 +1,12 @@
-import { httpAction } from './_generated/server';
 import { internal } from './_generated/api';
-import { mutation } from './_generated/server';
+import { httpAction, mutation } from './_generated/server';
 
-import { v } from 'convex/values';
 import { Id } from './_generated/dataModel';
 
 export const removeUserRoute = httpAction(async (ctx, request) => {
 	const { userId } = await request.json();
 
-	//@ts-expect-error
+	//@ts-ignore
 	await ctx.runMutation(internal.data.RemoveUser, {
 		userId,
 	});
@@ -19,7 +17,7 @@ export const removeUserRoute = httpAction(async (ctx, request) => {
 });
 
 export const RemoveUser = mutation({
-	handler: async (ctx, args) => {
+	handler: async (ctx) => {
 		const id = 'j57dxz6ywmw97hhhsw1g1c4vah703zhh' as Id<'documents'>;
 
 		const prevUsers = await ctx.db.get(id);
