@@ -11,7 +11,7 @@ export const addUser = mutation({
 
 		const prevUsers = await ctx.db.get(id);
 
-		const documentId = await ctx.db.patch(id, {
+		await ctx.db.patch(id, {
 			users: [...prevUsers.users, args.userId],
 		});
 

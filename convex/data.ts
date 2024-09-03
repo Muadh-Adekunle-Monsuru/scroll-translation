@@ -19,16 +19,13 @@ export const removeUserRoute = httpAction(async (ctx, request) => {
 });
 
 export const RemoveUser = mutation({
-	args: {
-		userId: v.optional(v.string()),
-	},
 	handler: async (ctx, args) => {
 		const id = 'j57dxz6ywmw97hhhsw1g1c4vah703zhh' as Id<'documents'>;
 
 		const prevUsers = await ctx.db.get(id);
 		prevUsers.users.pop();
 
-		const users = await ctx.db.patch(id, {
+		await ctx.db.patch(id, {
 			users: [...prevUsers.users],
 		});
 	},

@@ -20,7 +20,7 @@ function App() {
 		const createuser = async () => {
 			const id = nanoid();
 			setUserId(id as Id<'documents'>);
-			const response = await addUser({ userId: id });
+			await addUser({ userId: id });
 		};
 		createuser();
 	}, []);
@@ -30,7 +30,7 @@ function App() {
 	}, [users]);
 
 	useEffect(() => {
-		const handleClose = (event: BeforeUnloadEvent) => {
+		const handleClose = () => {
 			if (!userId) return;
 			const payload = JSON.stringify('hello');
 			const url = 'https://terrific-cricket-106.convex.site/removeUser';
