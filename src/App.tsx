@@ -14,14 +14,13 @@ function App() {
 		['100', '-100rem']
 	);
 	const [isConnected, setIsConnected] = useState(false);
-	const addUser = useMutation(api.data.addUser);
-	const users = useQuery(api.data.GetAllUsers);
-	const removeUser = useMutation(api.data.RemoveUser);
-
+	const addUser = useMutation(api.actions.addUser);
+	const users = useQuery(api.actions.GetAllUsers);
 	useEffect(() => {
 		const createuser = async () => {
-			const id = await addUser({ userId: nanoid() });
-			setUserId(id);
+			const id = nanoid();
+			setUserId(id as Id<'documents'>);
+			const response = await addUser({ userId: id });
 		};
 		createuser();
 	}, []);
@@ -33,15 +32,10 @@ function App() {
 	useEffect(() => {
 		const handleClose = (event: BeforeUnloadEvent) => {
 			if (!userId) return;
-
-			const payload = JSON.stringify({ userId });
-			const url = 'http://localhost:3000/removeUser';
+			const payload = JSON.stringify('hello');
+			const url = 'https://terrific-cricket-106.convex.site/removeUser';
 
 			navigator.sendBeacon(url, payload);
-
-			const message = 'Sure you want to leave?';
-			event.returnValue = message;
-			return message;
 		};
 
 		window.addEventListener('beforeunload', handleClose);
@@ -61,7 +55,7 @@ function App() {
 						} `}
 					></div>
 					<span className='text-sm text-white font-mono uppercase'>
-						{users?.length}
+						{users?.users?.length}
 					</span>
 				</div>
 				<div className='h-screen bg-[#1f1f1f] sticky top-0 flex items-center justify-center overflow-hidden'>

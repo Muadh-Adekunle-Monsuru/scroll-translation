@@ -1,32 +1,35 @@
-import { query, mutation } from './_generated/server';
+import { httpAction } from './_generated/server';
+import { internal } from './_generated/api';
+import { mutation } from './_generated/server';
+
 import { v } from 'convex/values';
+import { Id } from './_generated/dataModel';
 
-export const addUser = mutation({
-	args: {
-		userId: v.string(),
-	},
-	handler: async (ctx, args) => {
-		const documentId = await ctx.db.insert('documents', {
-			user: args.userId,
-		});
+export const removeUserRoute = httpAction(async (ctx, request) => {
+	const { userId } = await request.json();
 
-		return documentId;
-	},
-});
+	//@ts-expect-error
+	await ctx.runMutation(internal.data.RemoveUser, {
+		userId,
+	});
 
-export const GetAllUsers = query({
-	args: {},
-	handler: async (ctx) => {
-		const users = await ctx.db.query('documents').collect();
-		return users;
-	},
+	return new Response(null, {
+		status: 200,
+	});
 });
 
 export const RemoveUser = mutation({
 	args: {
-		userId: v.id('documents'),
+		userId: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		const users = await ctx.db.delete(args.userId);
+		const id = 'j57dxz6ywmw97hhhsw1g1c4vah703zhh' as Id<'documents'>;
+
+		const prevUsers = await ctx.db.get(id);
+		prevUsers.users.pop();
+
+		const users = await ctx.db.patch(id, {
+			users: [...prevUsers.users],
+		});
 	},
 });
