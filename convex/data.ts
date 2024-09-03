@@ -13,6 +13,10 @@ export const removeUserRoute = httpAction(async (ctx, request) => {
 
 	return new Response(null, {
 		status: 200,
+		headers: new Headers({
+			'Access-Control-Allow-Origin': 'https://scroll-wheat.vercel.app/',
+			Vary: 'origin',
+		}),
 	});
 });
 
