@@ -37,9 +37,9 @@ function App() {
 
 			navigator.sendBeacon(url, payload);
 
-			const message = 'sure?';
-			event.returnValue = message;
-			return message;
+			// const message = 'sure?';
+			// event.returnValue = message;
+			// return message;
 		};
 
 		window.addEventListener('beforeunload', handleClose);
