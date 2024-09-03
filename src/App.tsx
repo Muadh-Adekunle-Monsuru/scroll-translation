@@ -30,12 +30,16 @@ function App() {
 	}, [users]);
 
 	useEffect(() => {
-		const handleClose = () => {
+		const handleClose = (event: BeforeUnloadEvent) => {
 			if (!userId) return;
 			const payload = JSON.stringify('hello');
 			const url = 'https://terrific-cricket-106.convex.site/removeUser';
 
 			navigator.sendBeacon(url, payload);
+
+			const message = 'sure?';
+			event.returnValue = message;
+			return message;
 		};
 
 		window.addEventListener('beforeunload', handleClose);
