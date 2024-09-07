@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Card from './Card';
-import { useInView } from 'react-intersection-observer';
-import { useViewStore } from './store/store';
 import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import Card from './Card';
+import { useViewStore } from './store/store';
 
 export default function SunsetSection() {
 	const { scrollY } = useScroll();

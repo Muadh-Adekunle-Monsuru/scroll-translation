@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 import Card from './Card';
 import { useViewStore } from './store/store';
-import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
 
 export default function SpaceSection() {
 	const { scrollY } = useScroll();

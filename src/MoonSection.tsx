@@ -1,8 +1,7 @@
-import { useScroll, useTransform } from 'framer-motion';
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Card from './Card';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import Card from './Card';
 import { useViewStore } from './store/store';
 
 export default function MoonSection() {
