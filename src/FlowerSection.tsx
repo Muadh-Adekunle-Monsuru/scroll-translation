@@ -19,8 +19,11 @@ export default function FlowerSection() {
 		setView('flowers');
 	}, [inView]);
 	return (
-		<div ref={ref} className='h-[200vh] bg-inherit' id='flowers'>
-			<div className='h-screen sticky top-0 flex items-center justify-center '>
+		<div className='h-[200vh] bg-inherit' id='flowers'>
+			<div
+				ref={ref}
+				className='h-screen sticky top-0 flex items-center justify-center '
+			>
 				<motion.div
 					style={{ translateX: scroll }}
 					className='flex justify-between items-center gap-3'

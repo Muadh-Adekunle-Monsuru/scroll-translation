@@ -49,7 +49,7 @@ export default function Header() {
 								if (item)
 									item.scrollIntoView({ behavior: 'smooth', block: 'start' });
 							}}
-							className={`uppercase text-xs font-medium relative select-none px-2 md:px-5 py-1.5 cursor-pointer mix-blend-difference text-white z-10 first:pl-5  rounded-full ${elementInView == section.label && 'bg-gray-900/10'}`}
+							className={`uppercase text-xs font-medium relative select-none px-2 md:px-5 py-1.5 cursor-pointer mix-blend-difference text-white z-10 first:pl-5  rounded-full`}
 						>
 							{section.label}
 						</p>
